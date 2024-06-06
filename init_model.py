@@ -79,11 +79,8 @@ def generate_model(individual, stages, num_nodes, bits_indices, filters, num_lab
                 if len(predessors) == 0: continue
                 elif len(predessors) > 1:
                     sum_conv = dag.get_conv(predessors[0])
-                    node_name = predessors[0]
                     for prd in range(1, len(predessors)):
-                        name = f'{node_name}-{predessors[prd]}'
-                        sum_conv = tf.keras.layers.Add(name=name + "wop")([sum_conv, dag.get_conv(predessors[prd])])
-                        node_name += f'-{predessors[prd]}'
+                        sum_conv = tf.keras.layers.Add()([sum_conv, dag.get_conv(predessors[prd])])
 
                     d_node = add_convolution(sum_conv, f'{n}_conv', depth=filter)
                     dag.add_conv(n, d_node)
@@ -93,11 +90,8 @@ def generate_model(individual, stages, num_nodes, bits_indices, filters, num_lab
 
             if len(without_successors) > 1:
                 sum_conv = dag.get_conv(without_successors[0])
-                node_name = without_successors[0]
                 for suc in range(1, len(without_successors)):
-                    name = f'{node_name}-{without_successors[suc]}'
-                    sum_conv = tf.keras.layers.Add(name=name + "suc")([sum_conv, dag.get_conv(without_successors[suc])])
-                    node_name += f'-{without_successors[suc]}'
+                    sum_conv = tf.keras.layers.Add()([sum_conv, dag.get_conv(without_successors[suc])])
 
                 d_node = add_convolution(sum_conv, f'{stage_name}_output', depth=filter)
             else:
